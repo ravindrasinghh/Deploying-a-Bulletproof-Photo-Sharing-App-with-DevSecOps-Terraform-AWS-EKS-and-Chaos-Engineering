@@ -3,7 +3,7 @@ env:
   variables:
     AWS_DEFAULT_REGION: "ap-south-1"  # Specify the region
     REPOSITORY_NAME: "codedevops"    # ECR repository name
-    CLUSTER_NAME: "codedevops      # Cluster name
+    CLUSTER_NAME: "codedevops"      # Cluster name
 
 phases:
   install:
