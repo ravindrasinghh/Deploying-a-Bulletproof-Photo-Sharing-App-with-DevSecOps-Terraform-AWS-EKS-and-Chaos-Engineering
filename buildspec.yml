@@ -31,6 +31,7 @@ phases:
   pre_build:
     commands:
       - echo "Running Prowler for AWS security best practices assessment..."
+       - chmod +x prowler
       - ./prowler -r ap-south-1 -M csv > prowler-results-ap-south-1.csv
       - echo Logging in to Amazon ECR.......
       - aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin 434605749312.dkr.ecr.ap-south-1.amazonaws.com
