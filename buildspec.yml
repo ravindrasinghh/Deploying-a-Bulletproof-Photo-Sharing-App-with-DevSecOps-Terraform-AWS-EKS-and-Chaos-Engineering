@@ -8,21 +8,21 @@ env:
 phases:
   install:
     commands:    
-      # - echo "Installing GitLeaks..."
-      # - wget https://github.com/zricethezav/gitleaks/releases/download/v8.0.0/gitleaks_8.0.0_linux_x64.tar.gz
-      # - tar -xzf gitleaks_8.0.0_linux_x64.tar.gz
-      # - mv gitleaks /usr/local/bin/gitleaks
-      # - chmod +x /usr/local/bin/gitleaks      
-      # - apt-get install wget apt-transport-https gnupg
-      # - wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | apt-key add -
-      # - echo deb https://aquasecurity.github.io/trivy-repo/deb bionic main | tee -a /etc/apt/sources.list.d/trivy.list
-      # - apt-get update
-      # - apt-get install -y trivy
-      # - echo "Installing Hadolint..."
-      # - wget -O /usr/local/bin/hadolint https://github.com/hadolint/hadolint/releases/download/v2.8.0/hadolint-Linux-x86_64
-      # - chmod +x /usr/local/bin/hadolint
-      # - echo "Hadolint installed successfully!"
-      # - echo Install kubectl
+      - echo "Installing GitLeaks..."
+      - wget https://github.com/zricethezav/gitleaks/releases/download/v8.0.0/gitleaks_8.0.0_linux_x64.tar.gz
+      - tar -xzf gitleaks_8.0.0_linux_x64.tar.gz
+      - mv gitleaks /usr/local/bin/gitleaks
+      - chmod +x /usr/local/bin/gitleaks      
+      - apt-get install wget apt-transport-https gnupg
+      - wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | apt-key add -
+      - echo deb https://aquasecurity.github.io/trivy-repo/deb bionic main | tee -a /etc/apt/sources.list.d/trivy.list
+      - apt-get update
+      - apt-get install -y trivy
+      - echo "Installing Hadolint..."
+      - wget -O /usr/local/bin/hadolint https://github.com/hadolint/hadolint/releases/download/v2.8.0/hadolint-Linux-x86_64
+      - chmod +x /usr/local/bin/hadolint
+      - echo "Hadolint installed successfully!"
+      - echo Install kubectl
       - curl -o kubectl https://amazon-eks.s3.us-west-2.amazonaws.com/1.18.9/2020-11-02/bin/linux/amd64/kubectl
       - chmod +x ./kubectl
       - mv kubectl /usr/local/bin      
@@ -30,35 +30,35 @@ phases:
       - aws eks update-kubeconfig --name $CLUSTER_NAME --region $AWS_DEFAULT_REGION --kubeconfig tmp
       - kubectl config get-contexts --kubeconfig tmp
       
-  # pre_build:
-  #   commands:
-  #     - echo Logging in to Amazon ECR.......
-  #     - aws ecr get-login-password --region $AWS_DEFAULT_REGION| docker login --username AWS --password-stdin 434605749312.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com
-  #     - # Replace with this to your repository URI
-  #     - REPOSITORY_URI=434605749312.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$REPOSITORY_NAME
-  #     - IMAGE_TAG=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
-  #     - echo "Running Hadolint on Dockerfile..."
-  #     - hadolint Dockerfile || true 
+  pre_build:
+    commands:
+      - echo Logging in to Amazon ECR.......
+      - aws ecr get-login-password --region $AWS_DEFAULT_REGION| docker login --username AWS --password-stdin 434605749312.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com
+      - # Replace with this to your repository URI
+      - REPOSITORY_URI=434605749312.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$REPOSITORY_NAME
+      - IMAGE_TAG=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
+      - echo "Running Hadolint on Dockerfile..."
+      - hadolint Dockerfile || true 
 
-  # build:
-  #   commands:
-  #     - echo "Scanning repository for secrets with GitLeaks..."
-  #     - gitleaks detect --source='.' --report-format=json --report-path=gitleaks-report.json    
-  #     - echo "Building the Docker image..."
-  #     - docker build -t $REPOSITORY_URI:$IMAGE_TAG .
-  #     - docker tag $REPOSITORY_URI:$IMAGE_TAG $REPOSITORY_URI:latest
-  #     - echo "Scanning for vulnerabilities with Trivy..."
-  #     - trivy image 434605749312.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$REPOSITORY_NAME:latest || true
+  build:
+    commands:
+      - echo "Scanning repository for secrets with GitLeaks..."
+      - gitleaks detect --source='.' --report-format=json --report-path=gitleaks-report.json    
+      - echo "Building the Docker image..."
+      - docker build -t $REPOSITORY_URI:$IMAGE_TAG .
+      - docker tag $REPOSITORY_URI:$IMAGE_TAG $REPOSITORY_URI:latest
+      - echo "Scanning for vulnerabilities with Trivy..."
+      - trivy image 434605749312.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$REPOSITORY_NAME:latest || true
 
-  # post_build:
-  #   commands:  
-  #     - echo "Pushing the Docker image..."
-  #     - docker push $REPOSITORY_URI:$IMAGE_TAG    
-  #     - echo Deploying the application to Kubernetes...
-  #     - kubectl apply -f k8s-deployment.yaml --kubeconfig tmp
-  #     - kubectl set image deployment/myapp myapp=$REPOSITORY_URI:$IMAGE_TAG --record --kubeconfig tmp
-  #     - echo Checking the deployment status...
-  #     - kubectl rollout status deployment/myapp --kubeconfig tmp
+  post_build:
+    commands:  
+      - echo "Pushing the Docker image..."
+      - docker push $REPOSITORY_URI:$IMAGE_TAG    
+      - echo Deploying the application to Kubernetes...
+      - kubectl apply -f k8s-deployment.yaml --kubeconfig tmp
+      - kubectl set image deployment/myapp myapp=$REPOSITORY_URI:$IMAGE_TAG --record --kubeconfig tmp
+      - echo Checking the deployment status...
+      - kubectl rollout status deployment/myapp --kubeconfig tmp
   #     # - aws s3 cp gitleaks-report.json s3://$REPOSITORY_NAME-secops/${BUILD_NUMBER}-gitleaks-report.json
   #     # - aws s3 cp trivy-report.json s3://$REPOSITORY_NAME-secops/${BUILD_NUMBER}-trivy-report.json
       
