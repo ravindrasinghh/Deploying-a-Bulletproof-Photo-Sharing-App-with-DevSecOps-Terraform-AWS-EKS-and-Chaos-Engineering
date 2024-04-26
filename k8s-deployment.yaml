@@ -13,7 +13,7 @@ spec:
         app: myapp
     spec:
       containers:
-      - image: 434605749312.dkr.ecr.ap-south-1.amazonaws.com/codedevops:latest
+      - image: CONTAINER_IMAGE
         name: myapp
         ports:
         - containerPort: 5000
