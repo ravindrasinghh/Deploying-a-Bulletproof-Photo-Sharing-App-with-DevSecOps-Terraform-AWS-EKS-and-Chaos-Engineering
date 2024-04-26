@@ -24,6 +24,11 @@ phases:
       - wget -O /usr/local/bin/hadolint https://github.com/hadolint/hadolint/releases/download/v2.8.0/hadolint-Linux-x86_64
       - chmod +x /usr/local/bin/hadolint
       - echo "Hadolint installed successfully!"
+      - echo Install kubectl
+      - curl -o kubectl https://amazon-eks.s3.us-west-2.amazonaws.com/1.18.9/2020-11-02/bin/linux/amd64/kubectl
+      - chmod +x ./kubectl
+      - mv kubectl /usr/local/bin
+      - aws eks update-kubeconfig --name cluster-name --region region      
   pre_build:
     commands:
       - echo Logging in to Amazon ECR.......
@@ -47,10 +52,12 @@ phases:
   post_build:
     commands:  
       - echo "Pushing the Docker image..."
-      - docker push $REPOSITORY_URI:$IMAGE_TAG
-      - docker push $REPOSITORY_URI:latest      
-      - echo "Uploading reports to S3..."
-      - BUILD_NUMBER=$(echo $CODEBUILD_BUILD_NUMBER)
+      - docker push $REPOSITORY_URI:$IMAGE_TAG    
+      - echo Deploying the application to Kubernetes...
+      - kubectl apply -f k8s-deployment.yaml
+      - kubectl set image deployment/myapp myapp==$REPOSITORY_URI:$IMAGE_TAG --record
+      - echo Checking the deployment status...
+      - kubectl rollout status deployment/myapp
       # - aws s3 cp gitleaks-report.json s3://codedevops-secops/${BUILD_NUMBER}-gitleaks-report.json
       # - aws s3 cp trivy-report.json s3://codedevops-secops/${BUILD_NUMBER}-trivy-report.json
       
