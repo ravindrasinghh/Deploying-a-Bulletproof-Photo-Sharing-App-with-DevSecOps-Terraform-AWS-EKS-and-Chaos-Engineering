@@ -12,7 +12,7 @@ phases:
     commands:
       - echo "Logging in to Amazon ECR..."
       - $(aws ecr get-login --no-include-email --region ap-south-1)
-      - REPOSITORY_URI=434605749312.dkr.ecr.ap-south-1.amazonaws.com/gameday
+      - REPOSITORY_URI=434605749312.dkr.ecr.ap-south-1.amazonaws.com/codedevops
       - IMAGE_TAG=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
       - echo "Running Hadolint on Dockerfile..."
       - hadolint Dockerfile
