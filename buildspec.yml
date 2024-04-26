@@ -1,0 +1,39 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      docker: 19
+    commands:
+      - echo "Starting the Docker daemon..."
+      - nohup /usr/local/bin/dockerd --host=unix:///var/run/docker.sock --host=tcp://0.0.0.0:2375 --storage-driver=overlay2 &
+      - timeout 15 sh -c "until docker info; do echo .; sleep 1; done"
+      - echo "Installing Trivy..."
+      - sudo yum install -y yum-utils
+      - sudo yum-config-manager --add-repo https://aquasecurity.github.io/trivy-repo/rpm/releases/$(uname -m)
+      - sudo yum install -y trivy
+      - echo "Installing Hadolint..."
+      - sudo wget -O /usr/local/bin/hadolint https://github.com/hadolint/hadolint/releases/download/v2.8.0/hadolint-Linux-x86_64
+      - sudo chmod +x /usr/local/bin/hadolint
+  pre_build:
+    commands:
+      - echo "Logging in to Amazon ECR..."
+      - $(aws ecr get-login --no-include-email --region ap-south-1)
+      - REPOSITORY_URI=434605749312.dkr.ecr.ap-south-1.amazonaws.com/gameday
+      - IMAGE_TAG=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
+      - echo "Running Hadolint on Dockerfile..."
+      - hadolint Dockerfile
+      - echo "Scanning for vulnerabilities with Trivy..."
+      - trivy filesystem --exit-code 1 --no-progress /
+
+  build:
+    commands:
+      - echo "Building the Docker image..."
+      - docker build -t $REPOSITORY_URI:$IMAGE_TAG .
+      - docker tag $REPOSITORY_URI:$IMAGE_TAG $REPOSITORY_URI:latest
+
+  post_build:
+    commands:
+      - echo "Pushing the Docker image..."
+      - docker push $REPOSITORY_URI:$IMAGE_TAG
+      - docker push $REPOSITORY_URI:latest
