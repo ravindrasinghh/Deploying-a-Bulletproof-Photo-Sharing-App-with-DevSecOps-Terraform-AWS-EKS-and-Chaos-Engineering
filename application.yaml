@@ -1,0 +1,61 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: myapp
+spec:
+  selector:
+    matchLabels:
+      app: myapp
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: myapp
+    spec:
+      containers:
+      - image: 434605749312.dkr.ecr.ap-south-1.amazonaws.com/codedevops:latest
+        name: myapp
+        ports:
+        - containerPort: 5000
+        imagePullPolicy: Always
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: myapp
+spec:
+  ports:
+  - port: 80 #service port  #kubeproxy will open port on worker node to which can route traffic to alb
+    targetPort: 5000 #container port
+    protocol: TCP
+  type: ClusterIP
+  selector:
+    app: myapp
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: myapp
+  annotations:
+    # Ingress class to use the NGINX Ingress Controller
+    kubernetes.io/ingress.class: "nginx"
+    # AWS-specific annotations for SSL and the load balancer
+    alb.ingress.kubernetes.io/scheme: "internet-facing"
+    alb.ingress.kubernetes.io/target-type: "ip"
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS": 443}]'
+    alb.ingress.kubernetes.io/certificate-arn: "arn:aws:acm:ap-south-1:434605749312:certificate/9c87dc98-73ca-40f8-a731-280b943ea7f3"
+    alb.ingress.kubernetes.io/ssl-redirect: '443'
+spec:
+
+  rules:
+    - host: photoapp.codedevops.cloud
+      http:
+        paths:
+          - path: /
+            pathType: Exact
+            backend:
+              service:
+                name: myapp
+                port:
+                  number: 80   
