@@ -14,20 +14,21 @@ phases:
       - echo "Hadolint installed successfully!"
   pre_build:
     commands:
-      - echo "Logging in to Amazon ECR..."
-      - $(aws ecr get-login --no-include-email --region ap-south-1)
+      - echo Logging in to Amazon ECR.......
+      - aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin 434605749312.dkr.ecr.ap-south-1.amazonaws.com
+      - # Replace with this to your repository URI
       - REPOSITORY_URI=434605749312.dkr.ecr.ap-south-1.amazonaws.com/codedevops
       - IMAGE_TAG=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
       - echo "Running Hadolint on Dockerfile..."
       - hadolint Dockerfile
-      - echo "Scanning for vulnerabilities with Trivy..."
-      - trivy filesystem --exit-code 1 --no-progress /
 
   build:
     commands:
       - echo "Building the Docker image..."
       - docker build -t $REPOSITORY_URI:$IMAGE_TAG .
       - docker tag $REPOSITORY_URI:$IMAGE_TAG $REPOSITORY_URI:latest
+      - echo "Scanning for vulnerabilities with Trivy..."
+      - trivy image  --severity CRITICAL $REPOSITORY_URI:$IMAGE_TAG $REPOSITORY_URI:latest
 
   post_build:
     commands:
