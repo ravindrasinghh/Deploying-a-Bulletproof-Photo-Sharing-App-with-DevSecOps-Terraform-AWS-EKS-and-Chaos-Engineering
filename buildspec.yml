@@ -3,12 +3,15 @@ version: 0.2
 phases:
   install:
     commands:
-      - echo "Installing Trivy..."
-      - sudo yum install curl
-      - curl -L https://raw.githubusercontent.com/aquasecurity/trivy/master/install.sh | bash -s -- -b /usr/local/bin
+      - apt-get install wget apt-transport-https gnupg
+      - wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | apt-key add -
+      - echo deb https://aquasecurity.github.io/trivy-repo/deb bionic main | tee -a /etc/apt/sources.list.d/trivy.list
+      - apt-get update
+      - apt-get install -y trivy
       - echo "Installing Hadolint..."
-      - curl -L https://github.com/hadolint/hadolint/releases/download/v1.15.1/hadolint-Linux-x86_64 -o /usr/local/bin/hadolint
+      - wget -O /usr/local/bin/hadolint https://github.com/hadolint/hadolint/releases/download/v2.8.0/hadolint-Linux-x86_64
       - chmod +x /usr/local/bin/hadolint
+      - echo "Hadolint installed successfully!"
   pre_build:
     commands:
       - echo "Logging in to Amazon ECR..."
