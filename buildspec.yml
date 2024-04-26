@@ -5,9 +5,9 @@ phases:
     runtime-versions:
       docker: 19
     commands:
-      - echo "Starting the Docker daemon..."
-      - nohup /usr/local/bin/dockerd --host=unix:///var/run/docker.sock --host=tcp://0.0.0.0:2375 --storage-driver=overlay2 &
-      - timeout 15 sh -c "until docker info; do echo .; sleep 1; done"
+      - echo "Starting Docker..."
+      - sudo service docker start
+      - echo "Docker started."
       - echo "Installing Trivy..."
       - sudo yum install -y yum-utils
       - sudo yum-config-manager --add-repo https://aquasecurity.github.io/trivy-repo/rpm/releases/$(uname -m)
