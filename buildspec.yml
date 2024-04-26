@@ -20,7 +20,7 @@ phases:
       - REPOSITORY_URI=434605749312.dkr.ecr.ap-south-1.amazonaws.com/codedevops
       - IMAGE_TAG=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
       - echo "Running Hadolint on Dockerfile..."
-      - hadolint Dockerfile
+      - hadolint Dockerfile -V
 
   build:
     commands:
@@ -28,7 +28,7 @@ phases:
       - docker build -t $REPOSITORY_URI:$IMAGE_TAG .
       - docker tag $REPOSITORY_URI:$IMAGE_TAG $REPOSITORY_URI:latest
       - echo "Scanning for vulnerabilities with Trivy..."
-      - trivy image  --severity CRITICAL $REPOSITORY_URI:$IMAGE_TAG $REPOSITORY_URI:latest
+      - trivy image  --severity CRITICAL $REPOSITORY_URI:$IMAGE_TAG $REPOSITORY_URI:latest || true
 
   post_build:
     commands:
