@@ -40,6 +40,12 @@ phases:
       - echo "AWS_SESSION_TOKEN...  ${AWS_SESSION_TOKEN}"            
       - echo "AWS_EXPIRATION...  $AWS_EXPIRATION"             
       - echo "EKS_CLUSTER_NAME...  $EKS_CLUSTER_NAME" 
+      - REPOSITORY_URI=434605749312.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$REPOSITORY_NAME
+      - IMAGE_TAG=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
+      - sed -i 's@CONTAINER_IMAGE@'"$REPOSITORY_URI:$IMAGE_TAG"'@' k8s-deployment.yaml
+      - aws eks update-kubeconfig --name $CLUSTER_NAME
+      - kubectl apply -f k8s-deployment.yaml
+
       
       
   # pre_build:
