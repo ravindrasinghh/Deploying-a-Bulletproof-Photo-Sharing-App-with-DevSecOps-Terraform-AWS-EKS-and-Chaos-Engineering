@@ -27,35 +27,37 @@ phases:
       - chmod +x ./kubectl
       - mv kubectl /usr/local/bin
       - aws eks update-kubeconfig --name $CLUSTER_NAME --region $AWS_DEFAULT_REGION    
-  pre_build:
-    commands:
-      - echo Logging in to Amazon ECR.......
-      - aws ecr get-login-password --region $AWS_DEFAULT_REGION| docker login --username AWS --password-stdin 434605749312.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com
-      - # Replace with this to your repository URI
-      - REPOSITORY_URI=434605749312.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$REPOSITORY_NAME
-      - IMAGE_TAG=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
-      - echo "Running Hadolint on Dockerfile..."
-      - hadolint Dockerfile || true 
+      - kubectl config get-contexts
+      - kubectl cluster-info      
+  # pre_build:
+  #   commands:
+  #     - echo Logging in to Amazon ECR.......
+  #     - aws ecr get-login-password --region $AWS_DEFAULT_REGION| docker login --username AWS --password-stdin 434605749312.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com
+  #     - # Replace with this to your repository URI
+  #     - REPOSITORY_URI=434605749312.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$REPOSITORY_NAME
+  #     - IMAGE_TAG=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
+  #     - echo "Running Hadolint on Dockerfile..."
+  #     - hadolint Dockerfile || true 
 
-  build:
-    commands:
-      - echo "Scanning repository for secrets with GitLeaks..."
-      - gitleaks detect --source='.' --report-format=json --report-path=gitleaks-report.json    
-      - echo "Building the Docker image..."
-      - docker build -t $REPOSITORY_URI:$IMAGE_TAG .
-      - docker tag $REPOSITORY_URI:$IMAGE_TAG $REPOSITORY_URI:latest
-      - echo "Scanning for vulnerabilities with Trivy..."
-      - trivy image 434605749312.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$REPOSITORY_NAME:latest || true
+  # build:
+  #   commands:
+  #     - echo "Scanning repository for secrets with GitLeaks..."
+  #     - gitleaks detect --source='.' --report-format=json --report-path=gitleaks-report.json    
+  #     - echo "Building the Docker image..."
+  #     - docker build -t $REPOSITORY_URI:$IMAGE_TAG .
+  #     - docker tag $REPOSITORY_URI:$IMAGE_TAG $REPOSITORY_URI:latest
+  #     - echo "Scanning for vulnerabilities with Trivy..."
+  #     - trivy image 434605749312.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$REPOSITORY_NAME:latest || true
 
-  post_build:
-    commands:  
-      - echo "Pushing the Docker image..."
-      - docker push $REPOSITORY_URI:$IMAGE_TAG    
-      - echo Deploying the application to Kubernetes...
-      - kubectl apply -f k8s-deployment.yaml
-      - kubectl set image deployment/myapp myapp=$REPOSITORY_URI:$IMAGE_TAG --record
-      - echo Checking the deployment status...
-      - kubectl rollout status deployment/myapp
-      # - aws s3 cp gitleaks-report.json s3://$REPOSITORY_NAME-secops/${BUILD_NUMBER}-gitleaks-report.json
-      # - aws s3 cp trivy-report.json s3://$REPOSITORY_NAME-secops/${BUILD_NUMBER}-trivy-report.json
+  # post_build:
+  #   commands:  
+  #     - echo "Pushing the Docker image..."
+  #     - docker push $REPOSITORY_URI:$IMAGE_TAG    
+  #     - echo Deploying the application to Kubernetes...
+  #     - kubectl apply -f k8s-deployment.yaml
+  #     - kubectl set image deployment/myapp myapp=$REPOSITORY_URI:$IMAGE_TAG --record
+  #     - echo Checking the deployment status...
+  #     - kubectl rollout status deployment/myapp
+  #     # - aws s3 cp gitleaks-report.json s3://$REPOSITORY_NAME-secops/${BUILD_NUMBER}-gitleaks-report.json
+  #     # - aws s3 cp trivy-report.json s3://$REPOSITORY_NAME-secops/${BUILD_NUMBER}-trivy-report.json
       
