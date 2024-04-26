@@ -4,11 +4,8 @@ phases:
   install:
     commands:
       - echo "Installing dependencies..."
-      - apt-get update && apt-get install -y git python3-pip
-      - pip3 install awscli
-      - git clone https://github.com/prowler-cloud/prowler.git
-      - cd prowler
-      - pip3 install -r requirements.txt  # Ensure any Python dependencies are installed    
+      - pip install prowler
+      - prowler -v   
       - apt-get install wget apt-transport-https gnupg
       - wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | apt-key add -
       - echo deb https://aquasecurity.github.io/trivy-repo/deb bionic main | tee -a /etc/apt/sources.list.d/trivy.list
