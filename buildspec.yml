@@ -34,7 +34,12 @@ phases:
       - export AWS_SECRET_ACCESS_KEY="$(echo ${CREDENTIALS} | jq -r '.Credentials.SecretAccessKey')"
       - export AWS_SESSION_TOKEN="$(echo ${CREDENTIALS} | jq -r '.Credentials.SessionToken')"
       - export AWS_EXPIRATION=$(echo ${CREDENTIALS} | jq -r '.Credentials.Expiration')
-      - kubectl get pods -A
+      - echo "Credentials Value is..  ${CREDENTIALS}"      
+      - echo "AWS_ACCESS_KEY_ID...  ${AWS_ACCESS_KEY_ID}"            
+      - echo "AWS_SECRET_ACCESS_KEY...  ${AWS_SECRET_ACCESS_KEY}"            
+      - echo "AWS_SESSION_TOKEN...  ${AWS_SESSION_TOKEN}"            
+      - echo "AWS_EXPIRATION...  $AWS_EXPIRATION"             
+      - echo "EKS_CLUSTER_NAME...  $EKS_CLUSTER_NAME" 
       
       
   # pre_build:
