@@ -10,11 +10,16 @@ phases:
       # - export PATH=$SONAR_SCANNER_HOME/bin:$PATH
       # - export SONAR_SCANNER_OPTS="-server"
       # - sonar-scanner -Dsonar.organization=ravindrasinghh -Dsonar.projectKey=ravindrasinghh_codedevops -Dsonar.sources=. -Dsonar.host.url=https://sonarcloud.io
-      - git clone https://github.com/prowler-cloud/prowler
+      - echo "Installing Prowler..."
+      - git clone https://github.com/toniblyx/prowler.git
       - cd prowler
-      - poetry shell
-      - poetry install
-      - python prowler.py -v    
+      - pip install .
+      - prowler -V
+      - echo "Installing GitLeaks..."
+      - wget https://github.com/zricethezav/gitleaks/releases/download/v8.0.0/gitleaks_8.0.0_linux_x64.tar.gz
+      - tar -xzf gitleaks_8.0.0_linux_x64.tar.gz
+      - mv gitleaks /usr/local/bin/gitleaks
+      - chmod +x /usr/local/bin/gitleaks      
       - apt-get install wget apt-transport-https gnupg
       - wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | apt-key add -
       - echo deb https://aquasecurity.github.io/trivy-repo/deb bionic main | tee -a /etc/apt/sources.list.d/trivy.list
@@ -38,6 +43,8 @@ phases:
 
   build:
     commands:
+      - echo "Scanning repository for secrets with GitLeaks..."
+      - gitleaks detect --source='.' --report-format=json --report-path=gitleaks-report.json    
       - echo "Building the Docker image..."
       - docker build -t $REPOSITORY_URI:$IMAGE_TAG .
       - docker tag $REPOSITORY_URI:$IMAGE_TAG $REPOSITORY_URI:latest
