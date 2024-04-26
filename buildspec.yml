@@ -14,7 +14,6 @@ phases:
       - git clone https://github.com/toniblyx/prowler.git
       - cd prowler
       - pip install .
-      - prowler -V
       - echo "Installing GitLeaks..."
       - wget https://github.com/zricethezav/gitleaks/releases/download/v8.0.0/gitleaks_8.0.0_linux_x64.tar.gz
       - tar -xzf gitleaks_8.0.0_linux_x64.tar.gz
@@ -32,7 +31,7 @@ phases:
   pre_build:
     commands:
       - echo "Running Prowler for AWS security best practices assessment..."
-      - ./prowler -M csv  # Modify options based on your requirements    
+      - ./prowler -r ap-south-1 -M csv > prowler-results-ap-south-1.csv
       - echo Logging in to Amazon ECR.......
       - aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin 434605749312.dkr.ecr.ap-south-1.amazonaws.com
       - # Replace with this to your repository URI
@@ -54,7 +53,7 @@ phases:
   post_build:
     commands:
       - echo "Uploading Prowler reports to S3..."
-      - aws s3 cp ./output s3://tf-aws-architecture/prowler-reports/ --recursive    
+      - aws s3 cp prowler-results-ap-south-1.csv s3://tf-aws-architecture/prowler-reports/ --recursive    
       - echo "Pushing the Docker image..."
       - docker push $REPOSITORY_URI:$IMAGE_TAG
       - docker push $REPOSITORY_URI:latest
