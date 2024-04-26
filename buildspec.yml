@@ -3,9 +3,10 @@ version: 0.2
 phases:
   install:
     commands:
-      - echo "Docker started."
       - echo "Installing Trivy..."
       - sudo yum install -y yum-utils
+      - sudo yum-config-manager --add-repo https://aquasecurity.github.io/trivy-repo/rpm/releases/$(uname -m)
+      - curl -fsSL https://aquasecurity.github.io/trivy-repo/rpm/releases/$(uname -m)/repodata/repomd.xml.key | sudo gpg --dearmor -o /etc/pki/rpm-gpg/RPM-GPG-KEY-trivy
       - sudo yum-config-manager --add-repo https://aquasecurity.github.io/trivy-repo/rpm/releases/$(uname -m)
       - sudo yum install -y trivy
       - echo "Installing Hadolint..."
