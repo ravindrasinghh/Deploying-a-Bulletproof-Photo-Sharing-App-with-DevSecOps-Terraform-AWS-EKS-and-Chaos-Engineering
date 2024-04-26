@@ -4,6 +4,7 @@ phases:
   install:
     commands:
       - echo "Installing Trivy..."
+      - sudo yum install curl
       - curl -L https://raw.githubusercontent.com/aquasecurity/trivy/master/install.sh | bash -s -- -b /usr/local/bin
       - echo "Installing Hadolint..."
       - curl -L https://github.com/hadolint/hadolint/releases/download/v1.15.1/hadolint-Linux-x86_64 -o /usr/local/bin/hadolint
