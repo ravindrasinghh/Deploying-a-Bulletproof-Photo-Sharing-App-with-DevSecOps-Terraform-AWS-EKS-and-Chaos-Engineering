@@ -4,14 +4,10 @@ phases:
   install:
     commands:
       - echo "Installing Trivy..."
-      - sudo yum install -y yum-utils
-      - sudo yum-config-manager --add-repo https://aquasecurity.github.io/trivy-repo/rpm/releases/$(uname -m)
-      - curl -fsSL https://aquasecurity.github.io/trivy-repo/rpm/releases/$(uname -m)/repodata/repomd.xml.key | sudo gpg --dearmor -o /etc/pki/rpm-gpg/RPM-GPG-KEY-trivy
-      - sudo yum-config-manager --add-repo https://aquasecurity.github.io/trivy-repo/rpm/releases/$(uname -m)
-      - sudo yum install -y trivy
+      - curl -L https://raw.githubusercontent.com/aquasecurity/trivy/master/install.sh | bash -s -- -b /usr/local/bin
       - echo "Installing Hadolint..."
-      - sudo wget -O /usr/local/bin/hadolint https://github.com/hadolint/hadolint/releases/download/v2.8.0/hadolint-Linux-x86_64
-      - sudo chmod +x /usr/local/bin/hadolint
+      - curl -L https://github.com/hadolint/hadolint/releases/download/v1.15.1/hadolint-Linux-x86_64 -o /usr/local/bin/hadolint
+      - chmod +x /usr/local/bin/hadolint
   pre_build:
     commands:
       - echo "Logging in to Amazon ECR..."
