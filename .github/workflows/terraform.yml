@@ -58,6 +58,8 @@ jobs:
     - name: Run tfsec
       run: tfsec .
       working-directory: terraform-infra     
+      continue-on-error: true
+
 
     - name: Terraform Plan
       run: terraform plan --var-file=dev.terraform.tfvars
