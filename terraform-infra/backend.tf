@@ -1,8 +1,8 @@
 terraform {
   backend "s3" {
     bucket = "codedevops-secops"
-    key    = "ap-south-1"
-    region = "us-east-1"
+    key    = "secops-dev.tfstae"
+    region = "ap-south-1"
   }
 }
 
