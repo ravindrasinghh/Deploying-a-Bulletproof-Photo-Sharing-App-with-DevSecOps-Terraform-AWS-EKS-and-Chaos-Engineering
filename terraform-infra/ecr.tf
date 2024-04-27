@@ -8,4 +8,7 @@ resource "aws_ecr_repository" "foo" {
 
   # }
   #checkov:skip=CKV_AWS_163:ECR image scan on push is not enabled
+  tags = {
+    Name = "${local.project}-${var.env}-ecr"
+  }
 }

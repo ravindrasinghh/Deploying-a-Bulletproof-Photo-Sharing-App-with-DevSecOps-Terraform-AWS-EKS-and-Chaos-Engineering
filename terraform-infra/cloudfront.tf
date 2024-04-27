@@ -2,7 +2,7 @@
 #   source              = "terraform-aws-modules/cloudfront/aws"
 #   version             = "3.4.0"
 #   comment             = "Created from terraform"
-#   aliases             = ["ravindra.codedevops.cloud"]
+#   aliases             = ["share.codedevops.cloud", "download.codedevops.cloud"]
 #   create_distribution = true
 #   enabled             = true
 #   is_ipv6_enabled     = true
@@ -50,41 +50,41 @@
 #     }
 #   ]
 # }
-# # resource "aws_wafv2_web_acl" "cloudfront_waf" {
-# #   name        = "${var.env}-cloudfront-acl"
-# #   description = "This WAF will be used PORTAL UI"
-# #   scope       = "CLOUDFRONT"
+# resource "aws_wafv2_web_acl" "cloudfront_waf" {
+#   name        = "${var.env}-cloudfront-acl"
+#   description = "This WAF will be used PORTAL UI"
+#   scope       = "CLOUDFRONT"
 
 
-# #   default_action {
-# #     allow {}
-# #   }
-# #   rule {
-# #     name     = "managed-oswap-rule"
-# #     priority = 0
+#   default_action {
+#     allow {}
+#   }
+#   rule {
+#     name     = "managed-oswap-rule"
+#     priority = 0
 
-# #     override_action {
-# #       none {
+#     override_action {
+#       none {
 
-# #       }
-# #     }
-# #     statement {
-# #       managed_rule_group_statement {
-# #         name        = "AWSManagedRulesCommonRuleSet"
-# #         vendor_name = "AWS"
-# #       }
-# #     }
+#       }
+#     }
+#     statement {
+#       managed_rule_group_statement {
+#         name        = "AWSManagedRulesCommonRuleSet"
+#         vendor_name = "AWS"
+#       }
+#     }
 
-# #     visibility_config {
-# #       cloudwatch_metrics_enabled = true
-# #       metric_name                = "AWSManagedRulesCommonRuleSet"
-# #       sampled_requests_enabled   = true
-# #     }
-# #   }
+#     visibility_config {
+#       cloudwatch_metrics_enabled = true
+#       metric_name                = "AWSManagedRulesCommonRuleSet"
+#       sampled_requests_enabled   = true
+#     }
+#   }
 
-# #   visibility_config {
-# #     cloudwatch_metrics_enabled = true
-# #     metric_name                = "AWSManagedRulesCommonRuleSet"
-# #     sampled_requests_enabled   = true
-# #   }
-# # }
+#   visibility_config {
+#     cloudwatch_metrics_enabled = true
+#     metric_name                = "AWSManagedRulesCommonRuleSet"
+#     sampled_requests_enabled   = true
+#   }
+# }

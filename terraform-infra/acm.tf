@@ -9,7 +9,7 @@ module "acm_backend" {
   validation_method   = "DNS"
   wait_for_validation = true
   tags = {
-    Name = "${var.env}-backend-validation"
+    Name = "${local.project}-${var.env}-backend-validation"
   }
 }
 
@@ -32,6 +32,6 @@ module "acm_cf" {
   validation_method   = "DNS"
   wait_for_validation = true
   tags = {
-    Name = "${var.env}-backend-validation"
+    Name = "${local.project}-${var.env}-backend-cloudfront"
   }
 }

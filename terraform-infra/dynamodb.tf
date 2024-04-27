@@ -11,6 +11,6 @@ resource "aws_dynamodb_table" "photos_metadata" {
   }
 
   tags = {
-    Name = "PhotosMetadata"
+    Name = "${local.project}-PhotosMetadata"
   }
 }

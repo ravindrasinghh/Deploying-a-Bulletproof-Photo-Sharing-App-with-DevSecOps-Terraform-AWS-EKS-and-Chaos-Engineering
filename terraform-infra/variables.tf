@@ -6,8 +6,6 @@ variable "vpc_config" {
 
 }
 
-
-
 variable "cluster_config" {
   type = any
 }

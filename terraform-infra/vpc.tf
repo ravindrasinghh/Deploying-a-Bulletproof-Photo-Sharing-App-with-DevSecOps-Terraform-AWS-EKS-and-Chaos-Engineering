@@ -6,19 +6,19 @@ resource "aws_vpc" "vpc" {
 
 
   tags = {
-    Name = "main"
+    Name = "${local.project}-${var.env}-main"
   }
 }
 resource "aws_internet_gateway" "igw" {
   vpc_id = aws_vpc.vpc.id
   tags = {
-    Name = "igw"
+    Name = "${local.project}-${var.env}-igw"
   }
 }
 resource "aws_eip" "nat" {
   vpc = true
   tags = {
-    Name = "nat"
+    Name = "${local.project}-${var.env}-eip"
   }
 }
 
@@ -27,7 +27,7 @@ resource "aws_nat_gateway" "nat" {
   subnet_id     = aws_subnet.public-ap-south-1a.id
 
   tags = {
-    Name = "nat"
+    Name = "${local.project}-${var.env}-nat"
   }
 
   depends_on = [aws_internet_gateway.igw]
@@ -38,7 +38,7 @@ resource "aws_subnet" "private-ap-south-1a" {
   availability_zone = "ap-south-1a"
 
   tags = {
-    "Name"                                                     = "private-ap-south-1a"
+    "Name"                                                     = "${local.project}-${var.env}-private-ap-south-1a"
     "kubernetes.io/role/internal-elb"                          = "1"
     "kubernetes.io/cluster/${var.cluster_config.cluster_name}" = "owned"
   }
@@ -49,7 +49,7 @@ resource "aws_subnet" "private-ap-south-1b" {
   cidr_block        = var.vpc_config.private_sub2_cidr_block
   availability_zone = "ap-south-1b"
   tags = {
-    "Name"                                                     = "private-ap-south-1b"
+    "Name"                                                     = "${local.project}-${var.env}-private-ap-south-1b"
     "kubernetes.io/role/internal-elb"                          = "1"
     "kubernetes.io/cluster/${var.cluster_config.cluster_name}" = "owned"
   }
@@ -62,7 +62,7 @@ resource "aws_subnet" "public-ap-south-1a" {
   map_public_ip_on_launch = true
 
   tags = {
-    "Name"                                                     = "public-ap-south-1a"
+    "Name"                                                     = "${local.project}-${var.env}-public-ap-south-1a"
     "kubernetes.io/role/elb"                                   = "1"
     "kubernetes.io/cluster/${var.cluster_config.cluster_name}" = "owned"
   }
@@ -75,7 +75,7 @@ resource "aws_subnet" "public-ap-south-1b" {
   map_public_ip_on_launch = true
 
   tags = {
-    "Name"                                                     = "public-ap-south-1b"
+    "Name"                                                     = "${local.project}-${var.env}-public-ap-south-1b"
     "kubernetes.io/role/elb"                                   = "1"
     "kubernetes.io/cluster/${var.cluster_config.cluster_name}" = "owned"
   }
@@ -89,7 +89,7 @@ resource "aws_route_table" "private" {
   }
 
   tags = {
-    Name = "private"
+    Name = "${local.project}-${var.env}-private"
   }
 }
 
@@ -101,7 +101,7 @@ resource "aws_route_table" "public" {
   }
 
   tags = {
-    Name = "public"
+    Name = "${local.project}-${var.env}-public"
   }
 }
 
