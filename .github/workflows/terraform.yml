@@ -67,7 +67,7 @@ jobs:
       run: |
         ls
         pwd
-        checkov -d . --framework terraform --check PCI --download-external-modules true
+        checkov -d . --framework terraform --download-external-modules true
       working-directory: terraform-infra
       continue-on-error: true
       
