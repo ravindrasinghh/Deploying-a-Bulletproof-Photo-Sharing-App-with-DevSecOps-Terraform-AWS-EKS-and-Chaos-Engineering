@@ -56,8 +56,8 @@ jobs:
         sudo install tfsec /usr/local/bin/
 
     - name: Run tfsec
-      run: tfsec ./terraform-infra
-      working-directory: terraform-infra      
+      run: tfsec .
+      working-directory: terraform-infra     
 
     - name: Terraform Plan
       run: terraform plan --var-file=dev.terraform.tfvars
