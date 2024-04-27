@@ -48,7 +48,16 @@ jobs:
         terraform fmt -check
         terraform validate -no-color
       working-directory: terraform-infra
+      
+    - name: Install tfsec
+      run: |
+        wget -q $(wget -qO- https://api.github.com/repos/aquasecurity/tfsec/releases/latest | grep -o -E "https://[^\"]*linux_amd64.tar.gz") -O tfsec.tar.gz
+        tar -xzf tfsec.tar.gz
+        sudo install tfsec /usr/local/bin/
 
+    - name: Run tfsec
+      run: tfsec ./terraform-infra
+      working-directory: terraform-infra      
 
     - name: Terraform Plan
       run: terraform plan --var-file=dev.terraform.tfvars
