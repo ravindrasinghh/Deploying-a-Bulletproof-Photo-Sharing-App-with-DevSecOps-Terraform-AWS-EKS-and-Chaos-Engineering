@@ -64,7 +64,7 @@ jobs:
       run: pip install checkov
 
     - name: Run Checkov PCI Scan
-      run: checkov -d . --framework terraform --check PCI
+      run: checkov -d . --framework terraform --check PCI --download-external-modules true
       working-directory: terraform-infra
       continue-on-error: true
       
