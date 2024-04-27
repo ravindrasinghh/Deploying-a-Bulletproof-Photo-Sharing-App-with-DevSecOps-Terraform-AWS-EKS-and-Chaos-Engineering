@@ -63,7 +63,6 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ github.event.inputs.infrastructure-audit == 'yes' }}
 
-
     steps:
     - name: Checkout
       uses: actions/checkout@v3
@@ -86,23 +85,3 @@ jobs:
       run: |
         checkov -d . --framework terraform --download-external-modules true
       continue-on-error: true
-      
-  owasp_zap_scan:
-    name: OWASP ZAP Scan
-    runs-on: ubuntu-latest
-    if: ${{ github.event.inputs.owasp_zap_scan == 'yes' }}
-
-    steps:
-    - name: Checkout
-      uses: actions/checkout@v3
-      
-    - name: Use OWASP ZAP Docker image  # Use a ZAP Docker image
-      uses: docker/setup-docker@v3
-      with:
-        image: owasp/zap2docker-stable  # Specify the ZAP Docker image     
-        
-    - name: OWASP ZAP Full Scan
-      run: |
-        docker run --rm -v $PWD:/zap/wrk owasp/zap2docker-stable zap-cli -h "https://coditas.com" -P 443
-
-      
