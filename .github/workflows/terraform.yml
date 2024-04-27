@@ -26,7 +26,7 @@ jobs:
   terraform:
     name: infrastructure-dev
     runs-on: ubuntu-latest
-    if: ${{ github.event.inputs.run_infrastructure_audit == 'yes' }}
+    if: ${{ github.event.inputs.terraform == 'yes' }}
     defaults:
       run:
         shell: bash
@@ -61,7 +61,7 @@ jobs:
   infrastructure-audit:
     name: infrastructure-audit
     runs-on: ubuntu-latest
-    if: ${{ github.event.inputs.run_infrastructure_audit == 'yes' }}
+    if: ${{ github.event.inputs.infrastructure-audit == 'yes' }}
 
 
     steps:
@@ -90,7 +90,7 @@ jobs:
   owasp_zap_scan:
     name: OWASP ZAP Scan
     runs-on: ubuntu-latest
-    if: ${{ github.event.inputs.run_infrastructure_audit == 'yes' }}
+    if: ${{ github.event.inputs.owasp_zap_scan == 'yes' }}
 
     steps:
     - name: Checkout
