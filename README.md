@@ -1,12 +1,17 @@
 ![CICD](docs/secops.jpg)
 
-**Step 1:** After Successfully Infrastructure creation ,Add and install the Nginx repository using the following Helm commands:
+**Step 1:** 
+After successfully creating the infrastructure, add and install the Nginx repository using the following Helm commands:    
 ```
 helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
 helm repo update
 helm install ingress-nginx ingress-nginx/ingress-nginx --version 4.10.0 --namespace ingress-nginx --create-namespace --set controller.service.annotations."service\.beta\.kubernetes\.io/aws-load-balancer-ssl-cert"="acm-cert-arn" -f nginx-config.yaml
 ```
 You can also customize the Nginx value: [https://github.com/kubernetes/ingress-nginx]
+
+**Step 2:** Run a bash script to create and authenticate CodeBuild with AWS EKS and update the EKS cluster's aws-auth ConfigMap with the new role.
+1. chmod +x `iam-role-autenticate-eks.sh`
+2. `./iam-role-autenticate-eks.sh`
 
 ## Requirements
 
