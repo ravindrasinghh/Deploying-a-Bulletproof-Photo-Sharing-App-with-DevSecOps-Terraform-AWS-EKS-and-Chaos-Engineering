@@ -1,15 +1,7 @@
-name: 'Terraform'
+name: 'Terraform and Security Scanning'
 
 on:
   workflow_dispatch:
-  pull_request:
-    branches: 
-      - master
-  push:
-    branches:
-     - master
-    paths:
-      - '*/**'
 permissions:
   id-token: write
   contents: read 
@@ -49,34 +41,48 @@ jobs:
         terraform validate -no-color
       working-directory: terraform-infra
       
+    - name: Terraform Plan
+      run: terraform plan --var-file=dev.terraform.tfvars
+      working-directory: terraform-infra
+
+  infrastructure-audit:
+    name: infrastructure-audit
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+
     - name: Install tfsec
       run: |
         wget -q $(wget -qO- https://api.github.com/repos/aquasecurity/tfsec/releases/latest | grep -o -E "https://[^\"]*linux_amd64.tar.gz") -O tfsec.tar.gz
         tar -xzf tfsec.tar.gz
         sudo install tfsec /usr/local/bin/
+      working-directory: terraform-infra
 
     - name: Run tfsec
       run: tfsec .
-      working-directory: terraform-infra     
+      working-directory: terraform-infra
       continue-on-error: true
-      
+
     - name: Install Checkov
       run: pip install checkov
 
     - name: Run Checkov PCI Scan
       run: |
-        ls
-        pwd
         checkov -d . --framework terraform --download-external-modules true
       working-directory: terraform-infra
       continue-on-error: true
       
+  owasp_zap_scan:
+    name: OWASP ZAP Scan
+    runs-on: ubuntu-latest
 
-
-    - name: Terraform Plan
-      run: terraform plan --var-file=dev.terraform.tfvars
-      working-directory: terraform-infra
-
-
-    # - name: Terraform Apply
-    #   run: terraform apply --auto-approve --var-file=dev.terraform.tfvars 
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+    - name: OWASP ZAP Full Scan
+      uses: zaproxy/action-full-scan@v0.2.0
+      with:
+        target: 'https://coditas.com'
+      
