@@ -90,7 +90,7 @@ jobs:
     steps:
       - name: Notify Slack
         if: ${{ success() }}
-        uses: ravsamhq/notify-slack-action@v1  # Use the notify-slack-action
+        uses: Ilshidur/action-slack@2.0.2
         env:
           SLACK_CHANNEL: '#devsecops'
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}  # Reference secret
