@@ -82,3 +82,28 @@ jobs:
       run: |
         checkov -d . --framework terraform --download-external-modules true
       continue-on-error: true
+      
+  notifications:
+    if: ${{ always() }}
+    needs: [terraform, infrastructure-audit]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Notify Slack on Success
+        if: ${{ success() }}
+        uses: rtCamp/action-slack-notify@v2
+        env:
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SLACK_CHANNEL: your-slack-channel
+          SLACK_COLOR: '#36A64F'  # Green for success
+          SLACK_MESSAGE: 'Workflow succeeded!'
+          SLACK_TITLE: 'Success'
+
+      - name: Notify Slack on Failure
+        if: ${{ failure() }}
+        uses: rtCamp/action-slack-notify@v2
+        env:
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SLACK_CHANNEL: your-slack-channel
+          SLACK_COLOR: '#FF0000'  # Red for failure
+          SLACK_MESSAGE: 'Workflow failed!'
+          SLACK_TITLE: 'Failure'      
