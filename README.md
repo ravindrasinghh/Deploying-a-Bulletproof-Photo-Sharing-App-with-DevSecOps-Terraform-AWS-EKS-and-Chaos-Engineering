@@ -1,7 +1,7 @@
 ![CICD](docs/devsecops.jpeg)
 
 **Step 1:** 
-After successfully creating the infrastructure, add and install the Nginx repository using the following Helm commands:    
+After successfully creating the infrastructure, add and install the Nginx Ingress Controller and repository using the following Helm commands:    
 ```
 helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
 helm repo update
