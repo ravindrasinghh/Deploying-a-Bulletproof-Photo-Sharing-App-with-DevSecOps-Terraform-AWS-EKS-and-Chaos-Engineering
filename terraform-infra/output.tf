@@ -56,3 +56,7 @@ output "vpc_details" {
   }
   description = "Details of the main VPC"
 }
+output "dynamodb_table_name" {
+  value       = aws_dynamodb_table.photos_metadata.name
+  description = "The name of the DynamoDB table."
+}
