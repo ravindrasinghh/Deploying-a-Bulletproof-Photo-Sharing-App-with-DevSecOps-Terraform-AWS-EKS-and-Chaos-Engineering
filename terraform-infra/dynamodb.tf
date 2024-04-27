@@ -7,7 +7,7 @@ resource "aws_dynamodb_table" "photos_metadata" {
 
   attribute {
     name = "photo_id"
-    type = "S"  # S denotes String
+    type = "S" # S denotes String
   }
 
   tags = {
