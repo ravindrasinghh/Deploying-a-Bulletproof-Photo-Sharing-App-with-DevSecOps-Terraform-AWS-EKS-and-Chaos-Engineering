@@ -40,21 +40,20 @@ jobs:
       uses: hashicorp/setup-terraform@v1
       with:
         terraform_version: ${{ env.TF_VERSION }} 
-        
-    - name: Change to Terraform Directory
-      run: cd terraform-infra     
+          
 
-    - name: Terraform Init
-      run: terraform init
+    - name: Terraform Init, Format, Validate
+      run: |
+        terraform init
+        terraform fmt -check
+        terraform validate -no-color
+      working-directory: terraform-infra
 
-    - name: Terraform Format
-      run: terraform fmt -check
-
-    - name: Terraform Validate
-      run: terraform validate -no-color      
 
     - name: Terraform Plan
-      run: terraform plan --var-file=dev.terraform.tfvars  
+      run: terraform plan --var-file=dev.terraform.tfvars
+      working-directory: terraform-infra
+
 
     # - name: Terraform Apply
     #   run: terraform apply --auto-approve --var-file=dev.terraform.tfvars 
