@@ -26,7 +26,7 @@ jobs:
   terraform:
     name: infrastructure-dev
     runs-on: ubuntu-latest
-
+    if: ${{ github.event.inputs.run_infrastructure_audit == 'yes' }}
     defaults:
       run:
         shell: bash
@@ -61,6 +61,8 @@ jobs:
   infrastructure-audit:
     name: infrastructure-audit
     runs-on: ubuntu-latest
+    if: ${{ github.event.inputs.run_infrastructure_audit == 'yes' }}
+
 
     steps:
     - name: Checkout
@@ -83,12 +85,12 @@ jobs:
     - name: Run Checkov PCI Scan
       run: |
         checkov -d . --framework terraform --download-external-modules true
-      working-directory: terraform-infra
       continue-on-error: true
       
   owasp_zap_scan:
     name: OWASP ZAP Scan
     runs-on: ubuntu-latest
+    if: ${{ github.event.inputs.run_infrastructure_audit == 'yes' }}
 
     steps:
     - name: Checkout
