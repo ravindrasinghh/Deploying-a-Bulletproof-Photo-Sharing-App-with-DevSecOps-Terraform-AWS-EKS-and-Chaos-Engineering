@@ -73,27 +73,20 @@ jobs:
 
     - name: Run tfsec
       run: tfsec .
+      working-directory: terraform-infra
       continue-on-error: true
 
     - name: Install Checkov
       run: pip install checkov
 
-    - name: Run Checkov PCI Scan
+    - name: Run Kubernetes IAC Scan
+      run: |
+        checkov -d . --framework kubernetes --download-external-modules true
+      continue-on-error: true
+
+    - name: Run Checkov IAC Scan
       run: |
         checkov -d . --framework terraform --download-external-modules true
+      working-directory: terraform-infra 
       continue-on-error: true
       
-  notifications:
-    if: ${{ always() }}
-    needs: [terraform, infrastructure-audit]
-    runs-on: ubuntu-latest
-    steps:
-      - name: Notify Slack
-        if: ${{ success() }}
-        uses: Ilshidur/action-slack@2.0.2
-        env:
-          SLACK_CHANNEL: '#devsecops'
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}  # Reference secret
-        with:
-          status: ${{ job.status }}  # Get job status (failure or success)
-          notify_when: all  # Optional: Only notify on failure (change to 'always' for all)  
