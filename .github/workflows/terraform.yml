@@ -11,10 +11,7 @@ on:
         description: 'Run Infrastructure Audit Job (yes/no)'
         required: true
         default: 'no'
-      owasp_zap_scan:
-        description: 'Run OWASP ZAP Scan Job (yes/no)'
-        required: true
-        default: 'no'
+        
 permissions:
   id-token: write
   contents: read 
