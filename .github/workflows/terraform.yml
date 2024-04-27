@@ -88,22 +88,12 @@ jobs:
     needs: [terraform, infrastructure-audit]
     runs-on: ubuntu-latest
     steps:
-      - name: Notify Slack on Success
+      - name: Notify Slack
         if: ${{ success() }}
-        uses: rtCamp/action-slack-notify@v2
+        uses: ravsamhq/notify-slack-action@v1  # Use the notify-slack-action
         env:
-          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
-          SLACK_CHANNEL: your-slack-channel
-          SLACK_COLOR: '#36A64F'  # Green for success
-          SLACK_MESSAGE: 'Workflow succeeded!'
-          SLACK_TITLE: 'Success'
-
-      - name: Notify Slack on Failure
-        if: ${{ failure() }}
-        uses: rtCamp/action-slack-notify@v2
-        env:
-          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
-          SLACK_CHANNEL: 'devsecops
-          SLACK_COLOR: '#FF0000'  # Red for failure
-          SLACK_MESSAGE: 'Workflow failed!'
-          SLACK_TITLE: 'Failure'      
+          SLACK_CHANNEL: '#devsecops'
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}  # Reference secret
+        with:
+          status: ${{ job.status }}  # Get job status (failure or success)
+          notify_when: all  # Optional: Only notify on failure (change to 'always' for all)  
