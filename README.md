@@ -1,3 +1,13 @@
+![CICD](docs/secops.jpg)
+
+**Step 1:** After Successfully Infrastructure creation ,Add and install the Nginx repository using the following Helm commands:
+```
+helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
+helm repo update
+helm install ingress-nginx ingress-nginx/ingress-nginx --version 4.10.0 --namespace ingress-nginx --create-namespace --set controller.service.annotations."service\.beta\.kubernetes\.io/aws-load-balancer-ssl-cert"="acm-cert-arn" -f nginx-config.yaml
+```
+You can also customize the Nginx value: [https://github.com/kubernetes/ingress-nginx]
+
 ## Requirements
 
 | Name | Version |
@@ -11,7 +21,7 @@
 
 | Name | Version |
 |------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | 5.47.0 |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | >= 4.29.0 |
 
 ## Modules
 
@@ -24,6 +34,7 @@
 
 | Name | Type |
 |------|------|
+| [aws_dynamodb_table.photos_metadata](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/dynamodb_table) | resource |
 | [aws_ecr_repository.foo](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ecr_repository) | resource |
 | [aws_eip.nat](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/eip) | resource |
 | [aws_eks_cluster.cluster](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/eks_cluster) | resource |
@@ -64,6 +75,7 @@
 
 | Name | Description |
 |------|-------------|
+| <a name="output_dynamodb_table_name"></a> [dynamodb\_table\_name](#output\_dynamodb\_table\_name) | The name of the DynamoDB table. |
 | <a name="output_ecr_repository_details"></a> [ecr\_repository\_details](#output\_ecr\_repository\_details) | Details of the ECR repositories including URLs and ARNs |
 | <a name="output_eks_values"></a> [eks\_values](#output\_eks\_values) | Values related to the AWS EKS managed node group |
 | <a name="output_vpc_details"></a> [vpc\_details](#output\_vpc\_details) | Details of the main VPC |
