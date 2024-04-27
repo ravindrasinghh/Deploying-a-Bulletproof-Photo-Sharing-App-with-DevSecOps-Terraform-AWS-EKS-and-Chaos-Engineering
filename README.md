@@ -1,4 +1,4 @@
-![CICD](docs/secops.jpg)
+![CICD](docs/secops.jpeg)
 
 **Step 1:** 
 After successfully creating the infrastructure, add and install the Nginx repository using the following Helm commands:    
