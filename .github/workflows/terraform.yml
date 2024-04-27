@@ -65,6 +65,7 @@ jobs:
 
     - name: Run Checkov PCI Scan
       run: checkov -d . --framework terraform --check PCI
+      working-directory: terraform-infra
       continue-on-error: true
       
 
