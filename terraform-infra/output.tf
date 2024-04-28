@@ -73,3 +73,12 @@ output "dynamodb_table_name" {
   value       = aws_dynamodb_table.photos_metadata.name
   description = "The name of the DynamoDB table."
 }
+
+output "s3_bucket_name" {
+  value       = aws_s3_bucket.photos.id
+  description = "The name of the S3 bucket."
+}
+output "cloudfront_url" {
+  value       = module.ui-cf.cloudfront_distribution_arn
+  description = "The URL of the CloudFront distribution."
+}

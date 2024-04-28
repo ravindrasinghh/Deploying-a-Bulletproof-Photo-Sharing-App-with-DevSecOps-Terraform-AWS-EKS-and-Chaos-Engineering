@@ -34,6 +34,8 @@ You can also customize the Nginx value: [https://github.com/kubernetes/ingress-n
 |------|--------|---------|
 | <a name="module_acm_backend"></a> [acm\_backend](#module\_acm\_backend) | terraform-aws-modules/acm/aws | 4.0.1 |
 | <a name="module_acm_cf"></a> [acm\_cf](#module\_acm\_cf) | terraform-aws-modules/acm/aws | 4.0.1 |
+| <a name="module_ui"></a> [ui](#module\_ui) | terraform-aws-modules/s3-bucket/aws | 3.3.0 |
+| <a name="module_ui-cf"></a> [ui-cf](#module\_ui-cf) | terraform-aws-modules/cloudfront/aws | 3.4.0 |
 
 ## Resources
 
@@ -65,6 +67,7 @@ You can also customize the Nginx value: [https://github.com/kubernetes/ingress-n
 | [aws_subnet.public-ap-south-1a](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/subnet) | resource |
 | [aws_subnet.public-ap-south-1b](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/subnet) | resource |
 | [aws_vpc.vpc](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc) | resource |
+| [aws_wafv2_web_acl.cloudfront_waf](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/wafv2_web_acl) | resource |
 | [aws_caller_identity.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/caller_identity) | data source |
 | [aws_route53_zone.main](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/route53_zone) | data source |
 
@@ -82,8 +85,10 @@ You can also customize the Nginx value: [https://github.com/kubernetes/ingress-n
 
 | Name | Description |
 |------|-------------|
+| <a name="output_cloudfront_url"></a> [cloudfront\_url](#output\_cloudfront\_url) | The URL of the CloudFront distribution. |
 | <a name="output_dynamodb_table_name"></a> [dynamodb\_table\_name](#output\_dynamodb\_table\_name) | The name of the DynamoDB table. |
 | <a name="output_ecr_repository_details"></a> [ecr\_repository\_details](#output\_ecr\_repository\_details) | Details of the ECR repositories including URLs and ARNs |
 | <a name="output_eks_values_private_nodes_01"></a> [eks\_values\_private\_nodes\_01](#output\_eks\_values\_private\_nodes\_01) | Values related to the AWS EKS managed node group for private-nodes-01 |
 | <a name="output_eks_values_private_nodes_02"></a> [eks\_values\_private\_nodes\_02](#output\_eks\_values\_private\_nodes\_02) | Values related to the AWS EKS managed node group for private-nodes-02 |
+| <a name="output_s3_bucket_name"></a> [s3\_bucket\_name](#output\_s3\_bucket\_name) | The name of the S3 bucket. |
 | <a name="output_vpc_details"></a> [vpc\_details](#output\_vpc\_details) | Details of the main VPC |
