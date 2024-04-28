@@ -84,5 +84,6 @@ You can also customize the Nginx value: [https://github.com/kubernetes/ingress-n
 |------|-------------|
 | <a name="output_dynamodb_table_name"></a> [dynamodb\_table\_name](#output\_dynamodb\_table\_name) | The name of the DynamoDB table. |
 | <a name="output_ecr_repository_details"></a> [ecr\_repository\_details](#output\_ecr\_repository\_details) | Details of the ECR repositories including URLs and ARNs |
-| <a name="output_eks_values"></a> [eks\_values](#output\_eks\_values) | Values related to the AWS EKS managed node group |
+| <a name="output_eks_values_private_nodes_01"></a> [eks\_values\_private\_nodes\_01](#output\_eks\_values\_private\_nodes\_01) | Values related to the AWS EKS managed node group for private-nodes-01 |
+| <a name="output_eks_values_private_nodes_02"></a> [eks\_values\_private\_nodes\_02](#output\_eks\_values\_private\_nodes\_02) | Values related to the AWS EKS managed node group for private-nodes-02 |
 | <a name="output_vpc_details"></a> [vpc\_details](#output\_vpc\_details) | Details of the main VPC |
