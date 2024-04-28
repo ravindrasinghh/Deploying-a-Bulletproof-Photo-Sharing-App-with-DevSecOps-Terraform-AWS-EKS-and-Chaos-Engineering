@@ -19,17 +19,21 @@ You can also customize the Nginx value: [https://github.com/kubernetes/ingress-n
 ## GITLEAK
 ![GITLEAK](docs/gitleak.png)
 
+## Sonarqube
+![SONARQUBE](docs/sonarqube.png)
+
 ## Hadolint
 ![HADOLINT](docs/hadolint.png)
+
+## Trivy 
+![TRIVY](docs/sonarqube.png)
+
+## Slack
+![SLACK](docs/slack.png)
 
 ## Kubescape 
 ![KUBESCAPE](docs/kubescape.png)
 
-## Sonarqube
-![SONARQUBE](docs/sonarqube.png)
-
-## Trivy 
-![TRIVY](docs/sonarqube.png)
 
 ## TFSEC
 ![TFSEC](docs/tfsec.png)
@@ -37,8 +41,7 @@ You can also customize the Nginx value: [https://github.com/kubernetes/ingress-n
 ## Checkov
 ![CHECKOV](docs/checkov.png)
 
-## Slack
-![SLACK](docs/slack.png)
+
 ## Requirements
 
 | Name | Version |
