@@ -1,3 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: myapp-config
+data:
+  S3_BUCKET: "codedevops-staging-ui"
+  CLOUDFRONT_DOMAIN: "download.codedevops.cloud"
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -11,13 +19,24 @@ spec:
     metadata:
       labels:
         app: myapp
-    spec:
+    spec: 
       containers:
       - image: CONTAINER_IMAGE
         name: myapp
         ports:
         - containerPort: 5000
         imagePullPolicy: Always
+        env:
+        - name: S3_BUCKET
+          valueFrom:
+            configMapKeyRef:
+              name: myapp-config
+              key: S3_BUCKET
+        - name: CLOUDFRONT_DOMAIN
+          valueFrom:
+            configMapKeyRef:
+              name: myapp-config
+              key: CLOUDFRONT_DOMAIN
 
 ---
 apiVersion: v1
@@ -59,3 +78,10 @@ spec:
                 name: myapp
                 port:
                   number: 80   
+          - path: /upload
+            pathType: Prefix
+            backend:
+              service:
+                name: myapp
+                port:
+                  number: 80                  
