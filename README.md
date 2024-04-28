@@ -72,11 +72,11 @@ You can also customize the Nginx value: [https://github.com/kubernetes/ingress-n
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_cluster_config"></a> [cluster\_config](#input\_cluster\_config) | n/a | `any` | n/a | yes |
-| <a name="input_ecr_names"></a> [ecr\_names](#input\_ecr\_names) | # ECR | `any` | n/a | yes |
-| <a name="input_env"></a> [env](#input\_env) | n/a | `string` | n/a | yes |
-| <a name="input_ui_conf"></a> [ui\_conf](#input\_ui\_conf) | n/a | `any` | n/a | yes |
-| <a name="input_vpc_config"></a> [vpc\_config](#input\_vpc\_config) | n/a | `any` | n/a | yes |
+| <a name="input_cluster_config"></a> [cluster\_config](#input\_cluster\_config) | Configuration for the cluster, detailing specifics like size, type, and other cluster-related settings. | `any` | n/a | yes |
+| <a name="input_ecr_names"></a> [ecr\_names](#input\_ecr\_names) | Names of the Elastic Container Registry repositories required for the deployment. | `any` | n/a | yes |
+| <a name="input_env"></a> [env](#input\_env) | The deployment environment name, e.g., 'prod', 'dev', or 'test'. | `string` | n/a | yes |
+| <a name="input_ui_conf"></a> [ui\_conf](#input\_ui\_conf) | UI configuration settings, which may include theming, layout, and feature toggles. | `any` | n/a | yes |
+| <a name="input_vpc_config"></a> [vpc\_config](#input\_vpc\_config) | Configuration parameters for the VPC including subnets, CIDR blocks, and other network-related settings. | `any` | n/a | yes |
 
 ## Outputs
 
