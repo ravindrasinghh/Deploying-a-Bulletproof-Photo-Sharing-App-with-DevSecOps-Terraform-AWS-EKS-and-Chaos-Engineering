@@ -54,6 +54,10 @@ jobs:
     - name: Terraform Plan
       run: terraform plan --var-file=dev.terraform.tfvars
       working-directory: terraform-infra
+    - name: Terraform Apply
+      run: terraform apply --var-file=dev.terraform.tfvars
+      working-directory: terraform-infra
+      
 
   infrastructure-audit:
     name: infrastructure-audit
