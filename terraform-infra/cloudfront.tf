@@ -11,13 +11,13 @@ module "ui-cf" {
   wait_for_deployment           = false
   create_origin_access_identity = true
   origin_access_identities = {
-    codedevops_ui = "ui"
+    photoapp_codedevops_ui = "ui"
   }
   origin = {
     ui = {
       domain_name = module.ui.s3_bucket_bucket_regional_domain_name
       s3_origin_config = {
-        origin_access_identity = "codedevops_ui"
+        origin_access_identity = "photoapp_codedevops_ui"
       }
     }
   }
