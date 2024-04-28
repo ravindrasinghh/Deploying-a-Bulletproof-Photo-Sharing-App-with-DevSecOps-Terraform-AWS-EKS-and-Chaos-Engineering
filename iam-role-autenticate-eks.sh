@@ -1,78 +1,70 @@
 #!/bin/bash
 
-# Retrieve Account ID securely
+# Dynamically fetch the AWS Account ID
 ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
+ROLE_NAME="EksCodeBuildKubectlRole"
 
-# Define Trust Policy document with least privilege for security
-TRUST="{
-  \"Version\": \"2012-10-17\",
-  \"Statement\": [
-    {
-      \"Effect\": \"Allow\",
-      \"Principal\": {
-        \"AWS\": \"arn:aws:iam::${ACCOUNT_ID}:root\"
-      },
-      \"Action\": \"sts:AssumeRole\"
-    }
-  ]
-}"
+# Function to check if the IAM role exists
+check_role_existence() {
+    aws iam get-role --role-name $ROLE_NAME > /dev/null 2>&1
+    echo $?
+}
 
-# Create IAM Role for CodeBuild with informative error handling
-ROLE_ARN=$(aws iam create-role \
-  --role-name EksCodeBuildKubectlRole \
-  --assume-role-policy-document "$TRUST" \
-  --query 'Role.Arn' --output text 2>/dev/null)
-
-if [ -z "$ROLE_ARN" ]; then
-  echo "Error creating IAM role EksCodeBuildKubectlRole. Check AWS CLI configuration and IAM permissions."
-  exit 1
-fi
-
-# Define Inline Policy document with limited actions for security
-POLICY='{
+# Set the trust relationship policy JSON correctly
+TRUST_POLICY='{
   "Version": "2012-10-17",
   "Statement": [
     {
       "Effect": "Allow",
-      "Action": [
-        "eks:DescribeCluster",
-        "eks:DescribeClusterKubernetesVersion",
-        "eks:ListClusters",
-        "eks:DescribeNodepool",
-        "eks:ListNodepools",
-        "iam:GetRole",
-        "sts:GetCallerIdentity"
-      ],
+      "Principal": {
+        "AWS": "arn:aws:iam::'"${ACCOUNT_ID}"':root"
+      },
+      "Action": "sts:AssumeRole"
+    }
+  ]
+}'
+
+# Create IAM Role if it does not exist
+if [ $(check_role_existence) -ne 0 ]; then
+    echo "Creating IAM role..."
+    aws iam create-role --role-name $ROLE_NAME --assume-role-policy-document "$TRUST_POLICY"
+else
+    echo "Role already exists, skipping creation..."
+fi
+
+# Define inline policy for describing EKS resources
+INLINE_POLICY='{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": "eks:Describe*",
       "Resource": "*"
     }
   ]
 }'
 
-# Associate Inline Policy to the role with error handling
-aws iam put-role-policy --role-name EksCodeBuildKubectlRole --policy-name eks-describe --policy-document "$POLICY"
-if [ $? -ne 0 ]; then
-  echo "Error associating policy eks-describe to EksCodeBuildKubectlRole."
-  exit 1
-fi
+# File path for inline policy
+POLICY_FILE="/tmp/iam-eks-describe-policy"
+echo "$INLINE_POLICY" > $POLICY_FILE
 
-# Get current aws-auth configmap data (use yq for robustness)
-CURRENT_CONFIG=$(kubectl get configmap aws-auth -n kube-system -o yaml | yq -r .)
+# Attach the policy to the role
+aws iam put-role-policy --role-name $ROLE_NAME --policy-name eks-describe --policy-document "file://$POLICY_FILE"
 
-# Define new role information for patching (use yq for clarity)
-NEW_ROLE="
-  - rolearn: $ROLE_ARN
+# Prepare the role definition for the aws-auth configmap
+ROLE_DEF="  - rolearn: arn:aws:iam::${ACCOUNT_ID}:role/${ROLE_NAME}
     username: build
     groups:
-      - system:masters  # Consider reducing privileges if possible
-"
+      - system:masters"
 
-# Patch the aws-auth configmap with the new role using yq
-yq -y '.data.mapRoles[] += ("'"$NEW_ROLE"'" )' -i <(echo "$CURRENT_CONFIG") | kubectl patch configmap/aws-auth -n kube-system -p -
-
-# Check for patching errors
-if [ $? -ne 0 ]; then
-  echo "Error patching aws-auth configmap."
-  exit 1
+# Get current aws-auth configMap data, check for existing role and append if not present
+kubectl get configmap aws-auth -n kube-system -o yaml > /tmp/aws-auth-original.yml
+if ! grep -q "$ROLE_NAME" /tmp/aws-auth-original.yml; then
+    kubectl get -n kube-system configmap/aws-auth -o yaml | awk "/mapRoles: \|/{print;print \"$ROLE_DEF\";next}1" > /tmp/aws-auth-patch.yml
+    kubectl patch configmap aws-auth -n kube-system --patch "$(cat /tmp/aws-auth-patch.yml)"
+else
+    echo "Role already in aws-auth, no changes made..."
 fi
 
-echo "EksCodeBuildKubectlRole created and aws-auth configmap updated successfully!"
+# Verify the updated configMap
+kubectl get configmap aws-auth -o yaml -n kube-system
