@@ -75,7 +75,7 @@ output "dynamodb_table_name" {
 }
 
 output "s3_bucket_name" {
-  value       = aws_s3_bucket.photos.id
+  value       = module.ui.s3_bucket_arn
   description = "The name of the S3 bucket."
 }
 output "cloudfront_url" {

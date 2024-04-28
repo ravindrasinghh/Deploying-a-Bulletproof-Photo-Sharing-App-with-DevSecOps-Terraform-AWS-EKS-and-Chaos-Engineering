@@ -26,7 +26,7 @@ You can also customize the Nginx value: [https://github.com/kubernetes/ingress-n
 
 | Name | Version |
 |------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | >= 4.29.0 |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | 5.47.0 |
 
 ## Modules
 
