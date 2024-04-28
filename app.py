@@ -4,6 +4,7 @@ import uuid
 import os
 import json
 import logging
+from botocore.exceptions import ClientError
 
 
 app = Flask(__name__, static_url_path='/static')
@@ -11,14 +12,13 @@ app = Flask(__name__, static_url_path='/static')
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-
-# AWS S3
-s3 = boto3.client('s3',region_name='ap-south-1')
+s3 = boto3.client('s3')
 
                 
 
-S3_BUCKET = 'gameday-ravindra'
-CLOUDFRONT_DOMAIN = 'd3jlorfok45zz4.cloudfront.net'
+# Environment variables
+S3_BUCKET = os.getenv('S3_BUCKET', 'default-bucket')
+CLOUDFRONT_DOMAIN = os.getenv('CLOUDFRONT_DOMAIN', 'default.cloudfront.net')
 
 # AWS DynamoDB
 dynamodb = boto3.resource('dynamodb', region_name='ap-south-1')
