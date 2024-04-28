@@ -42,7 +42,8 @@ You can also customize the Nginx value: [https://github.com/kubernetes/ingress-n
 ## Checkov
 ![CHECKOV](docs/checkov.png)
 
-
+## Chaos Engineering
+![CE](docs/chaos-engineering.png)
 ## Requirements
 
 | Name | Version |
