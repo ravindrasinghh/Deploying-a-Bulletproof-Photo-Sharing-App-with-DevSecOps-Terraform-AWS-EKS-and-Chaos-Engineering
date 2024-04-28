@@ -13,20 +13,32 @@ You can also customize the Nginx value: [https://github.com/kubernetes/ingress-n
 1. chmod +x `iam-role-autenticate-eks.sh`
 2. `./iam-role-autenticate-eks.sh`
 
-![CICD](docs/secops.png)
+## Prowler
+![PROWLER](docs/prowler.png)
 
-**Step 1:** 
-After successfully creating the infrastructure, add and install the Nginx Ingress Controller and repository using the following Helm commands:    
-```
-helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
-helm repo update
-helm install ingress-nginx ingress-nginx/ingress-nginx --version 4.10.0 --namespace ingress-nginx --create-namespace --set controller.service.annotations."service\.beta\.kubernetes\.io/aws-load-balancer-ssl-cert"="acm-cert-arn" -f nginx-config.yaml
-```
-You can also customize the Nginx value: [https://github.com/kubernetes/ingress-nginx]
+## GITLEAK
+![GITLEAK](docs/gitleak.png)
 
-**Step 2:** Run a bash script to create and authenticate CodeBuild with AWS EKS and update the EKS cluster's aws-auth ConfigMap with the new role.
-1. chmod +x `iam-role-autenticate-eks.sh`
-2. `./iam-role-autenticate-eks.sh`
+## Hadolint
+![HADOLINT](docs/hadolint.png)
+
+## Kubescape 
+![KUBESCAPE](docs/kubescape.png)
+
+## Sonarqube
+![SONARQUBE](docs/sonarqube.png)
+
+## Trivy 
+![TRIVY](docs/sonarqube.png)
+
+## Slack
+![SLACK](docs/slack.png)
+
+## TFSEC
+![TFSEC](docs/rfsec.png)
+
+## Checkov
+![CHECKOV](docs/checkov.png)
 
 ## Requirements
 
