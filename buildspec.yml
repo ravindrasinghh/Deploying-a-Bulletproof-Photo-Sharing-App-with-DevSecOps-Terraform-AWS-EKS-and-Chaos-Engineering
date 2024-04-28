@@ -7,7 +7,8 @@ env:
 
 phases:
   install:
-    commands:    
+    commands:  
+      - sonar-scanner -Dsonar.organization=ravindrasinghh -Dsonar.projectKey=ravindrasinghh_codedevops -Dsonar.sources=.  -Dsonar.host.url=https://sonarcloud.io    
       - echo "Installing GitLeaks..."
       - wget https://github.com/zricethezav/gitleaks/releases/download/v8.0.0/gitleaks_8.0.0_linux_x64.tar.gz
       - tar -xzf gitleaks_8.0.0_linux_x64.tar.gz
