@@ -76,14 +76,14 @@ jobs:
       working-directory: terraform-infra
 
     - name: Run tfsec
-      run: tfsec .
+      run: tfsec . --exclude-downloaded-modules
       working-directory: terraform-infra
       continue-on-error: true
 
     - name: Install Checkov
       run: pip install checkov
 
-    - name: Run Kubernetes IAC Scan
+    - name: Run Kubernetes YAMLS files Scan
       run: |
         checkov -d . --framework kubernetes --download-external-modules true
       continue-on-error: true
