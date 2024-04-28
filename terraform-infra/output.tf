@@ -1,17 +1,30 @@
-output "eks_values" {
+output "eks_values_private_nodes_01" {
   value = {
-    node_group_name           = aws_eks_node_group.private-nodes.node_group_name
-    node_group_arn            = aws_eks_node_group.private-nodes.arn
-    node_group_status         = aws_eks_node_group.private-nodes.status
-    node_group_capacity_type  = aws_eks_node_group.private-nodes.capacity_type
-    node_group_instance_types = join(", ", aws_eks_node_group.private-nodes.instance_types)
-    node_group_desired_size   = aws_eks_node_group.private-nodes.scaling_config[0].desired_size
-    node_group_max_size       = aws_eks_node_group.private-nodes.scaling_config[0].max_size
-    node_group_min_size       = aws_eks_node_group.private-nodes.scaling_config[0].min_size
+    node_group_name           = aws_eks_node_group.private-nodes-01.node_group_name
+    node_group_arn            = aws_eks_node_group.private-nodes-01.arn
+    node_group_status         = aws_eks_node_group.private-nodes-01.status
+    node_group_capacity_type  = aws_eks_node_group.private-nodes-01.capacity_type
+    node_group_instance_types = join(", ", aws_eks_node_group.private-nodes-01.instance_types)
+    node_group_desired_size   = aws_eks_node_group.private-nodes-01.scaling_config[0].desired_size
+    node_group_max_size       = aws_eks_node_group.private-nodes-01.scaling_config[0].max_size
+    node_group_min_size       = aws_eks_node_group.private-nodes-01.scaling_config[0].min_size
   }
-  description = "Values related to the AWS EKS managed node group"
+  description = "Values related to the AWS EKS managed node group for private-nodes-01"
 }
 
+output "eks_values_private_nodes_02" {
+  value = {
+    node_group_name           = aws_eks_node_group.private-nodes-02.node_group_name
+    node_group_arn            = aws_eks_node_group.private-nodes-02.arn
+    node_group_status         = aws_eks_node_group.private-nodes-02.status
+    node_group_capacity_type  = aws_eks_node_group.private-nodes-02.capacity_type
+    node_group_instance_types = join(", ", aws_eks_node_group.private-nodes-02.instance_types)
+    node_group_desired_size   = aws_eks_node_group.private-nodes-02.scaling_config[0].desired_size
+    node_group_max_size       = aws_eks_node_group.private-nodes-02.scaling_config[0].max_size
+    node_group_min_size       = aws_eks_node_group.private-nodes-02.scaling_config[0].min_size
+  }
+  description = "Values related to the AWS EKS managed node group for private-nodes-02"
+}
 output "ecr_repository_details" {
   description = "Details of the ECR repositories including URLs and ARNs"
   value = {
