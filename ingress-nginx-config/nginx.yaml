@@ -1,0 +1,36 @@
+controller:
+  replicaCount: 2
+  minAvailable: 2
+  resources:
+    limits:
+      cpu: 200m
+      memory: 512Mi
+    requests:
+      cpu: 100m
+      memory: 256Mi
+  updateStrategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+  metrics:
+    port: 10254
+    enabled: true
+    serviceMonitor:
+      enabled: false
+      additionalLabels: 
+        release: "kube-prometheus-stack"
+    service:
+      annotations:
+       prometheus.io/scrape: "true"
+       prometheus.io/port: "10254"
+  service:
+    annotations:
+      service.beta.kubernetes.io/aws-load-balancer-backend-protocol: tcp
+      service.beta.kubernetes.io/aws-load-balancer-cross-zone-load-balancing-enabled: 'true'
+      service.beta.kubernetes.io/aws-load-balancer-type: nlb
+      service.beta.kubernetes.io/aws-load-balancer-ssl-ports: https
+      service.beta.kubernetes.io/aws-load-balancer-ssl-negotiation-policy: 'ELBSecurityPolicy-TLS13-1-2-2021-06'
+      service.beta.kubernetes.io/aws-load-balancer-proxy-protocol: "*"
+    targetPorts:
+      http: http
+      https: http
