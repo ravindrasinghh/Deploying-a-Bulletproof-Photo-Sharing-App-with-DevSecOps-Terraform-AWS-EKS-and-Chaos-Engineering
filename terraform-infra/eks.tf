@@ -90,9 +90,9 @@ resource "aws_eks_node_group" "private-nodes-01" {
   instance_types = ["t3a.medium"]
 
   scaling_config {
-    desired_size = 1
+    desired_size = 0
     max_size     = 1
-    min_size     = 1
+    min_size     = 0
   }
 
   update_config {
@@ -130,9 +130,9 @@ resource "aws_eks_node_group" "private-nodes-02" {
   instance_types = ["t3a.medium"]
 
   scaling_config {
-    desired_size = 1
+    desired_size = 0
     max_size     = 1
-    min_size     = 1
+    min_size     = 0
   }
 
   update_config {
@@ -153,4 +153,74 @@ resource "aws_eks_node_group" "private-nodes-02" {
     Name              = "${local.project}-${var.env}-eks"
     "node_group_name" = "private-nodes-02"
   }
+}
+
+resource "aws_iam_policy" "node_additional_permissions" {
+  name        = "eks-node-additional-permissions"
+  description = "Allow EKS nodes to interact with KMS, DynamoDB, and S3 for specific operations"
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Action = [
+          "kms:Encrypt",
+          "kms:Decrypt",
+          "kms:ReEncrypt*",
+          "kms:GenerateDataKey*",
+          "kms:DescribeKey"
+        ]
+        Resource = "*" # Specify your KMS key ARNs here if possible for better security
+      },
+      {
+        Effect = "Allow"
+        Action = [
+          "dynamodb:GetItem",
+          "dynamodb:PutItem",
+          "dynamodb:UpdateItem",
+          "dynamodb:Query",
+          "dynamodb:Scan",
+          "dynamodb:BatchGetItem",
+          "dynamodb:BatchWriteItem"
+        ]
+        Resource = "arn:aws:dynamodb:ap-south-1:434605749312:table/PhotosMetadata" # Specify your table ARN
+      },
+      {
+        Effect = "Allow"
+        Action = "s3:PutObject"
+        Resource = [
+          "arn:aws:s3:::codedevops-staging-ui/*"
+        ]
+      }
+    ]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "node-additional-permissions" {
+  role       = aws_iam_role.nodes.name
+  policy_arn = aws_iam_policy.node_additional_permissions.arn
+}
+# Attach AmazonSSMManagedInstanceCore
+resource "aws_iam_role_policy_attachment" "nodes-SSMManagedInstanceCore" {
+  role       = aws_iam_role.nodes.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
+}
+
+# Attach AmazonSSMFullAccess
+resource "aws_iam_role_policy_attachment" "nodes-SSMFullAccess" {
+  role       = aws_iam_role.nodes.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonSSMFullAccess"
+}
+
+# Attach AmazonEC2RoleforSSM (service-role)
+resource "aws_iam_role_policy_attachment" "nodes-EC2RoleForSSM" {
+  role       = aws_iam_role.nodes.name
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforSSM"
+}
+
+# Attach AmazonSSMManagedEC2InstanceDefaultPolicy
+resource "aws_iam_role_policy_attachment" "nodes-SessionManager" {
+  role       = aws_iam_role.nodes.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedEC2InstanceDefaultPolicy"
 }
