@@ -82,3 +82,10 @@ output "cloudfront_url" {
   value       = module.ui-cf.cloudfront_distribution_arn
   description = "The URL of the CloudFront distribution."
 }
+
+output "acm_arn" {
+  value = {
+    ui = module.acm_backend.acm_certificate_arn
+    cf = module.acm_cf.acm_certificate_arn
+  }
+}
