@@ -31,15 +31,14 @@ You can also customize the Nginx value: [https://github.com/kubernetes/ingress-n
 ## Trivy 
 ![TRIVY](docs/sonarqube.png)
 
-## Slack
-![SLACK](docs/slack.png)
-
 ## TFSEC
-![TFSEC](docs/rfsec.png)
+![TFSEC](docs/tfsec.png)
 
 ## Checkov
 ![CHECKOV](docs/checkov.png)
 
+## Slack
+![SLACK](docs/slack.png)
 ## Requirements
 
 | Name | Version |
