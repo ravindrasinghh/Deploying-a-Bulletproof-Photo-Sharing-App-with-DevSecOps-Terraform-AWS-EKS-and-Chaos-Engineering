@@ -18,6 +18,6 @@ resource "aws_dynamodb_table" "photos_metadata" {
   }
 }
 
- resource "aws_kms_key" "kms" {
-    description = "KMS key for DynamoDB table encryption"
-  }
+resource "aws_kms_key" "kms" {
+  description = "KMS key for DynamoDB table encryption"
+}
