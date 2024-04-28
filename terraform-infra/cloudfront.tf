@@ -1,14 +1,14 @@
 module "ui-cf" {
-  source              = "terraform-aws-modules/cloudfront/aws"
-  version             = "3.4.0"
-  comment             = "Created from terraform"
-  aliases             = ["share.codedevops.cloud", "download.codedevops.cloud"]
-  create_distribution = true
-  enabled             = true
-  is_ipv6_enabled     = true
-  price_class         = "PriceClass_All"
-  retain_on_delete    = false
-  wait_for_deployment = false
+  source                        = "terraform-aws-modules/cloudfront/aws"
+  version                       = "3.4.0"
+  comment                       = "Created from terraform"
+  aliases                       = ["share.codedevops.cloud", "download.codedevops.cloud"]
+  create_distribution           = true
+  enabled                       = true
+  is_ipv6_enabled               = true
+  price_class                   = "PriceClass_All"
+  retain_on_delete              = false
+  wait_for_deployment           = false
   create_origin_access_identity = true
   origin_access_identities = {
     codedevops_ui = "ui"
