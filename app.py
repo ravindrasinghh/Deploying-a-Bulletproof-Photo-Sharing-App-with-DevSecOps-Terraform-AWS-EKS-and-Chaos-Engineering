@@ -28,23 +28,21 @@ def index():
 def upload_file():
     file = request.files['file']
     if file:
-        original_filename = secure_filename(file.filename)
-        photo_id = str(uuid.uuid4())
-        filename = f"{photo_id}-{original_filename}"  # Unique and descriptive filename
+        original_filename = secure_filename(file.filename)  # Safely secure the filename
 
         # Upload to S3
-        s3.upload_fileobj(file, S3_BUCKET, filename)
+        s3.upload_fileobj(file, S3_BUCKET, original_filename)
 
         # Generate S3 URL
-        s3_url = f'https://{S3_BUCKET}.s3.amazonaws.com/{filename}'
+        s3_url = f'https://{S3_BUCKET}.s3.amazonaws.com/{original_filename}'
 
         # Generate URL from CloudFront
-        cloudfront_url = f'https://{CLOUDFRONT_DOMAIN}/{filename}'
+        cloudfront_url = f'https://{CLOUDFRONT_DOMAIN}/{original_filename}'
 
         # Store metadata in DynamoDB
         table.put_item(
             Item={
-                'photo_id': photo_id,
+                'photo_id': str(uuid.uuid4()),  # Generate a photo ID for internal tracking
                 'filename': original_filename,  # Store the original filename in DynamoDB
                 's3_url': s3_url,
                 'cloudfront_url': cloudfront_url
