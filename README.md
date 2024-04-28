@@ -26,7 +26,7 @@ You can also customize the Nginx value: [https://github.com/kubernetes/ingress-n
 ![HADOLINT](docs/hadolint.png)
 
 ## Trivy 
-![TRIVY](docs/sonarqube.png)
+![TRIVY](docs/trivy.png)
 
 ## Slack
 ![SLACK](docs/slack.png)
