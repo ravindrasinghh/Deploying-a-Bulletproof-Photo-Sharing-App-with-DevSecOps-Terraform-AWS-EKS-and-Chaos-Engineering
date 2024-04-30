@@ -52,19 +52,29 @@ echo "$INLINE_POLICY" > $POLICY_FILE
 aws iam put-role-policy --role-name $ROLE_NAME --policy-name eks-describe --policy-document "file://$POLICY_FILE"
 
 # Prepare the role definition for the aws-auth configmap
-ROLE_DEF="  - rolearn: arn:aws:iam::${ACCOUNT_ID}:role/${ROLE_NAME}
-    username: build
-    groups:
-      - system:masters"
+ROLE_DEF="- rolearn: arn:aws:iam::${ACCOUNT_ID}:role/${ROLE_NAME}
+  username: build
+  groups:
+    - system:masters"
 
-# Get current aws-auth configMap data, check for existing role and append if not present
-kubectl get configmap aws-auth -n kube-system -o yaml > /tmp/aws-auth-original.yml
-if ! grep -q "$ROLE_NAME" /tmp/aws-auth-original.yml; then
-    kubectl get -n kube-system configmap/aws-auth -o yaml | awk "/mapRoles: \|/{print;print \"$ROLE_DEF\";next}1" > /tmp/aws-auth-patch.yml
-    kubectl patch configmap aws-auth -n kube-system --patch "$(cat /tmp/aws-auth-patch.yml)"
+# Get the current aws-auth ConfigMap and save it
+TMP_FILE="/tmp/aws-auth.yml"
+kubectl get configmap aws-auth -n kube-system -o yaml > $TMP_FILE
+
+# Check if the role already exists in the ConfigMap
+if ! grep -q "$ROLE_NAME" $TMP_FILE; then
+    echo "Modifying aws-auth ConfigMap to add new role..."
+    # Use yq to update the YAML file safely
+    yq e '.data.mapRoles += "'"$ROLE_DEF"'"' -i $TMP_FILE
+    # Add last-applied-configuration annotation using current content
+    CONFIG=$(cat $TMP_FILE | yq e -j -)
+    yq e '.metadata.annotations["kubectl.kubernetes.io/last-applied-configuration"]=$CONFIG' -i $TMP_FILE --arg CONFIG "$CONFIG"
+    # Apply the updated ConfigMap
+    kubectl apply -f $TMP_FILE
 else
     echo "Role already in aws-auth, no changes made..."
 fi
 
-# Verify the updated configMap
+# Verify the updated ConfigMap
 kubectl get configmap aws-auth -o yaml -n kube-system
+
