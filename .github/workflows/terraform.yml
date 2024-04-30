@@ -76,7 +76,7 @@ jobs:
       working-directory: terraform-infra
 
     - name: Run tfsec
-      run: tfsec . --exclude-downloaded-modules
+      run: tfsec . --exclude-downloaded-modules --tfvars-file dev.terraform.tfvars
       working-directory: terraform-infra
       continue-on-error: true
 
