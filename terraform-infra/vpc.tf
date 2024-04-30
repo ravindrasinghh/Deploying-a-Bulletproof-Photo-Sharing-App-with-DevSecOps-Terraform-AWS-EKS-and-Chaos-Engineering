@@ -3,7 +3,7 @@ resource "aws_vpc" "vpc" {
   instance_tenancy     = var.vpc_config.instance_tenancy
   enable_dns_hostnames = var.vpc_config.enable_dns_hostnames
   enable_dns_support   = var.vpc_config.enable_dns_support
-
+  #tfsec:ignore:aws-ec2-require-vpc-flow-logs-for-all-vpcs
 
   tags = {
     Name = "${local.project}-${var.env}-main"

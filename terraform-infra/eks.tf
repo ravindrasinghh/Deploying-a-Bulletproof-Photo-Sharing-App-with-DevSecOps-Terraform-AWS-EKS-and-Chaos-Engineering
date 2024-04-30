@@ -90,9 +90,9 @@ resource "aws_eks_node_group" "private-nodes-01" {
   instance_types = ["t3a.medium"]
 
   scaling_config {
-    desired_size = 0
+    desired_size = 1
     max_size     = 1
-    min_size     = 0
+    min_size     = 1
   }
 
   update_config {
@@ -113,6 +113,9 @@ resource "aws_eks_node_group" "private-nodes-01" {
     Name              = "${local.project}-${var.env}-eks"
     "node_group_name" = "private-nodes-01"
   }
+   lifecycle {
+    create_before_destroy = true
+  }
 }
 
 resource "aws_eks_node_group" "private-nodes-02" {
@@ -130,9 +133,9 @@ resource "aws_eks_node_group" "private-nodes-02" {
   instance_types = ["t3a.medium"]
 
   scaling_config {
-    desired_size = 0
+    desired_size = 1
     max_size     = 1
-    min_size     = 0
+    min_size     = 1
   }
 
   update_config {
@@ -152,6 +155,9 @@ resource "aws_eks_node_group" "private-nodes-02" {
   tags = {
     Name              = "${local.project}-${var.env}-eks"
     "node_group_name" = "private-nodes-02"
+  }
+   lifecycle {
+    create_before_destroy = true
   }
 }
 

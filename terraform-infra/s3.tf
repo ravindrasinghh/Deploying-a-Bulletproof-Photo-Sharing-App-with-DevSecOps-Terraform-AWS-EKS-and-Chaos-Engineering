@@ -16,4 +16,7 @@ module "ui" {
       }
     }
   }
+  #problem highlighted by tfsec is not that important to us and that it would be okay to ignore it. We can inform it to tfsec by adding a comment at the top of the resource block where this problem exists.
+  #tfsec:ignore:<check-id>
+
 }
