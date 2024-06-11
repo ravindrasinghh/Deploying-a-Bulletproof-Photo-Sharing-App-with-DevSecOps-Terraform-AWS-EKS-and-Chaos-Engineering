@@ -132,3 +132,5 @@ You can also customize the Nginx value: [https://github.com/kubernetes/ingress-n
 | <a name="output_eks_values_private_nodes_02"></a> [eks\_values\_private\_nodes\_02](#output\_eks\_values\_private\_nodes\_02) | Values related to the AWS EKS managed node group for private-nodes-02 |
 | <a name="output_s3_bucket_name"></a> [s3\_bucket\_name](#output\_s3\_bucket\_name) | The name of the S3 bucket. |
 | <a name="output_vpc_details"></a> [vpc\_details](#output\_vpc\_details) | Details of the main VPC |
+
+You can find the video at [https://youtu.be/Uxx3Mkgc58k](https://youtu.be/Uxx3Mkgc58k) .
