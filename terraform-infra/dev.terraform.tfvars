@@ -19,18 +19,6 @@ cluster_config = {
 }
 
 
-
-eks_managed_node_groups = {
-  eks_node_group = {
-    name             = "nodegroup-1"
-    instance_types   = ["t3a.medium"]
-    desired_capacity = 2
-    min_capacity     = 1
-    max_capacity     = 3
-    capacity_type    = "ON_DEMAND"
-  }
-}
-
 ui_conf = {
   cloudfront_default_certificate = null
   ssl_support_method             = "sni-only"
