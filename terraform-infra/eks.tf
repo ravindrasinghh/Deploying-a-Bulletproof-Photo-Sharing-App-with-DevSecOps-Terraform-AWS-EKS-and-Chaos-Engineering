@@ -87,12 +87,12 @@ resource "aws_eks_node_group" "private-nodes-01" {
   ]
 
   capacity_type  = "SPOT"
-  instance_types = ["t3a.medium"]
+  instance_types = ["m5a.xlarge"]
 
   scaling_config {
-    desired_size = 0
+    desired_size = 1
     max_size     = 1
-    min_size     = 0
+    min_size     = 1
   }
 
   update_config {
@@ -127,12 +127,12 @@ resource "aws_eks_node_group" "private-nodes-02" {
   ]
 
   capacity_type  = "SPOT"
-  instance_types = ["t3a.medium"]
+  instance_types = ["m5a.xlarge"]
 
   scaling_config {
-    desired_size = 0
+    desired_size = 1
     max_size     = 1
-    min_size     = 0
+    min_size     = 1
   }
 
   update_config {
